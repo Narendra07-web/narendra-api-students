@@ -1,30 +1,48 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
+// Initial students data
 let students = [
-  { id: 1, name: "Narendra Kumar", age: 22, state: 'Uttar Pradesh'},
-  { id: 2, name: 'Nipender Singh', age: 21 , state: 'Uttar Pradesh'},
-  { id: 3, name: 'Nishant Kumar Tomar', age: 23 , state: 'Uttar Pradesh'}
+  { id: 1, name: "Narendra Kumar", age: 22, state: 'Uttar Pradesh' },
+  { id: 2, name: "Nipender Singh", age: 21, state: 'Uttar Pradesh' },
+  { id: 3, name: "Nishant Kumar Tomar", age: 23, state: 'Uttar Pradesh' }
 ];
 
-// GET Students
-app.get('/api/students', (req, res) => {
+// Root route with simple HTML form
+app.get('/', (req, res) => {
+  res.send(`
+    <h2>Student API</h2>
+    <p>Use <code>/api/students</code> to GET/POST data.</p>
+    <form action="/api/students" method="post">
+      Name: <input name="name" required><br>
+      Age: <input name="age" type="number" required><br>
+      State: <input name="state" required><br>
+      <button type="submit">Add Student</button>
+    </form>
+  `);
+});
+
+// GET all students
+app.get('/students', (req, res) => {
   res.json({ students });
 });
 
-// POST Student
-app.post('/api/students', (req, res) => {
+// POST add new student
+app.post('/students', (req, res) => {
   const newStudent = req.body;
+  // Auto-generate ID
+  newStudent.id = students.length > 0 ? students[students.length - 1].id + 1 : 1;
   students.push(newStudent);
   res.status(201).json({ message: "Student added", students });
 });
 
-// PUT Student
-app.put('/api/students/:id', (req, res) => {
+// PUT update student by ID
+app.put('/students/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const updatedData = req.body;
 
@@ -39,12 +57,11 @@ app.put('/api/students/:id', (req, res) => {
   }
 });
 
-// DELETE Student
-app.delete('/api/students/:id', (req, res) => {
+// DELETE student by ID
+app.delete('/students/:id', (req, res) => {
   const id = parseInt(req.params.id);
   students = students.filter(s => s.id !== id);
   res.json({ message: "Student deleted", students });
 });
 
-// Export app instead of listen (for Vercel)
-module.exports = app;
+module.exports = app; // Vercel ke liye
