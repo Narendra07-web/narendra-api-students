@@ -1,9 +1,3 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "temp/student.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "temp/student.js" }
-  ]
+  "version": 2
 }

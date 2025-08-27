@@ -17,8 +17,8 @@ let students = [
 app.get('/', (req, res) => {
   res.send(`
     <h2>Student API</h2>
-    <p>Use <code>/api/students</code> to GET/POST data.</p>
-    <form action="/api/students" method="post">
+    <p>Use <code>/students</code> to GET/POST data.</p>
+    <form action="/students" method="post">
       Name: <input name="name" required><br>
       Age: <input name="age" type="number" required><br>
       State: <input name="state" required><br>
@@ -63,5 +63,12 @@ app.delete('/students/:id', (req, res) => {
   students = students.filter(s => s.id !== id);
   res.json({ message: "Student deleted", students });
 });
+
+// Local par test karne ke liye listen add kiya hai
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
 
 module.exports = app; // Vercel ke liye
